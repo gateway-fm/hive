@@ -67,7 +67,7 @@ func main() {
 		resultsdir = flag.String("resultsdir", "/tmp/TestResults", "Results dir to scan")
 		outdir     = flag.String("outdir", "/tmp/", "Output dir for xunit xml")
 	)
-	flag.CommandLine.Parse(args)
+	flag.Parse()
 
 	log15.Info(fmt.Sprintf("loading results from %s", *resultsdir))
 	log15.Info(fmt.Sprintf("outputting xunit xml to %s", *outdir))
