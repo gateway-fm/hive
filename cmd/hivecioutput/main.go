@@ -62,7 +62,6 @@ type Failure struct {
 }
 
 func main() {
-	args := os.Args
 	var (
 		resultsdir = flag.String("resultsdir", "/tmp/TestResults", "Results dir to scan")
 		outdir     = flag.String("outdir", "/tmp/", "Output dir for xunit xml")
