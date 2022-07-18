@@ -9,8 +9,10 @@ FROM reqs as builder
 WORKDIR /app
 ADD . .
 RUN go build hive.go
+RUN go build -o hivecioutput cmd/hivecioutput/main.go
 
 FROM builder as runner
 WORKDIR /app
 COPY --from=builder /app/hive .
+COPY --from=builder /app/hivecioutput .
 ENTRYPOINT ["/app/hive"]
