@@ -62,6 +62,9 @@ type Failure struct {
 }
 
 func main() {
+	var exitcode bool
+	flag.BoolVar(&exitcode, "exitcode", true, "Return exit code 1 on failed tests")
+
 	var (
 		resultsdir = flag.String("resultsdir", "/tmp/TestResults", "Results dir to scan")
 		outdir     = flag.String("outdir", "/tmp/", "Output dir for xunit xml")
@@ -70,6 +73,7 @@ func main() {
 
 	log15.Info(fmt.Sprintf("loading results from %s", *resultsdir))
 	log15.Info(fmt.Sprintf("outputting xunit xml to %s", *outdir))
+	log15.Info(fmt.Sprintf("return exit code 1 on failed tests %v", exitcode))
 
 	outputs := []*libhive.TestSuite{}
 
@@ -88,7 +92,9 @@ func main() {
 	}
 
 	log15.Info("tests failed!")
-	os.Exit(1)
+	if exitcode {
+		os.Exit(1)
+	}
 }
 
 func outputXUnitXmlFile(outputs *[]*libhive.TestSuite, path string) {
