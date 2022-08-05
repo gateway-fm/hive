@@ -108,6 +108,7 @@ func outputXUnitXmlFile(outputs *[]*libhive.TestSuite, path string) {
 		tests := 0
 		failures := 0
 		caseNo := 0
+		tsTime := time.Second * 0
 		suiteNo++
 
 		oTs := Testsuite{
@@ -120,11 +121,15 @@ func outputXUnitXmlFile(outputs *[]*libhive.TestSuite, path string) {
 
 		for _, tc := range ts.TestCases {
 			caseNo++
+
+			tcTime := tc.End.Sub(tc.Start)
+			tsTime += tcTime
+
 			oTc := Testcase{
 				Text: tc.Description,
 				ID:   caseNo,
 				Name: tc.Name,
-				Time: "",
+				Time: fmt.Sprintf("%v", tcTime.Seconds()),
 			}
 
 			tests++
@@ -140,6 +145,7 @@ func outputXUnitXmlFile(outputs *[]*libhive.TestSuite, path string) {
 			oTs.Testcase = append(oTs.Testcase, oTc)
 			oTs.Tests = tests
 			oTs.Failures = failures
+			oTs.Time = fmt.Sprintf("%v", tsTime.Seconds())
 		}
 
 		opTs.Testsuite = append(opTs.Testsuite, oTs)
@@ -152,7 +158,7 @@ func outputXUnitXmlFile(outputs *[]*libhive.TestSuite, path string) {
 	opTs.Failures = totalFailures
 	opTs.ID = "0"
 	opTs.Name = "Hive Test Run"
-	opTs.Time = time.Now().String()
+	opTs.Time = ""
 
 	xmlContent, _ := xml.MarshalIndent(opTs, "", " ")
 	xmlContent = []byte(xml.Header + string(xmlContent))
